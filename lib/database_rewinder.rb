@@ -17,8 +17,8 @@ module DatabaseRewinder
 
     def create_cleaner(connection_name)
       config =  database_configuration[connection_name.to_sym] ||
-                  database_configuration[Padrino.env][connection_name.to_s] ||
-                  database_configuration[Padrino.env][connection_name.to_s.split('.')[0]][connection_name.to_s.split('.')[1]]
+                  database_configuration[ENV["RACK_ENV"].to_sym][connection_name.to_s] ||
+                  database_configuration[ENV["RACK_ENV"].to_sym][connection_name.to_s.split('.')[0]][connection_name.to_s.split('.')[1]]
 
       raise %Q[Database configuration named "#{connection_name}" is not configured.] unless config
 
