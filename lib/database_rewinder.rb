@@ -129,11 +129,17 @@ module DatabaseRewinder
   private_class_method :configuration_hash_for, :get_cache_key
 end
 
-begin
-  require 'rails'
-  require_relative 'database_rewinder/railtie'
-rescue LoadError
+if ENV['DISABLE_DATABASE_REWINDER_RAILS'] == '1'
   DatabaseRewinder.init
   require_relative 'database_rewinder/active_record_monkey'
   require_relative 'database_rewinder/cleaner'
+else
+  begin
+    require 'rails'
+    require_relative 'database_rewinder/railtie'
+  rescue LoadError
+    DatabaseRewinder.init
+    require_relative 'database_rewinder/active_record_monkey'
+    require_relative 'database_rewinder/cleaner'
+  end
 end
